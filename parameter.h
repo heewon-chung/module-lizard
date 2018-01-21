@@ -3,9 +3,9 @@
 
 #include <cstdint>
 
-uint16_t degree             = 256;
-uint16_t dimension          = 3;
-uint16_t coeffModulus       = 2048;
-uint16_t roundingModulus    = 512;
+const uint16_t degree             = 256;
+const uint16_t dimension          = 3;
+const uint16_t coeffModulus       = 2048;
+const uint16_t roundingModulus    = 512;
 
 #endif
