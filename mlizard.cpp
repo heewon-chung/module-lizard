@@ -2,10 +2,9 @@
 
 void secretKeyGeneration(PolyVec& secretKey){
 
-    #pragma omp parallel for
     for(size_t i = 0; i < dimension - 1; i++){
         
-        Poly skPoly = secretKey.poly[i];
+        Poly skPoly; initializePolynomial(skPoly);
 
         #pragma omp parallel for
         for(size_t j = 0; j < degree; j++){
@@ -33,9 +32,8 @@ void secretKeyGeneration(PolyVec& secretKey){
                     skPoly.coeff[j] = -2;
                 }
             }
-
         }
-
+        secretKey.poly[i] = skPoly;
     }
     
     secretKey.poly[dimension - 1].coeff[0] = 1;
