@@ -35,3 +35,11 @@ void addPolyVector(PolyVec& addPolyVec, const PolyVec& polyvec1, const PolyVec& 
     }
 
 }
+
+void printPolyVector(const PolyVec& polyVec){
+
+    for(size_t i = 0; i < dimension; i++){
+        printPolynomial(polyVec.poly[i]);
+    }
+    cout << endl;
+}

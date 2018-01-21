@@ -11,7 +11,6 @@
 using namespace std;
 
 typedef struct{
-    // Poly poly[dimension];
     Poly* poly = new Poly[dimension];
 } PolyVec;
 
@@ -21,5 +20,7 @@ void generatePolyVector(PolyVec&);
 void generateSignedPolyVector(PolyVec&);    
 
 void addPolyVector(PolyVec&, const PolyVec&, const PolyVec&);
+
+void printPolyVector(const PolyVec&);
 
 #endif
