@@ -10,8 +10,7 @@
 using namespace std;
 
 typedef struct{
-    // uint16_t coeff[degree];
-    uint16_t* coeff = new uint16_t[degree];
+    int16_t* coeff = new int16_t[degree];
 } Poly;
 
 void initializePolynomial(Poly&);
@@ -21,7 +20,7 @@ void generateSignedPolynomial(Poly&);
 
 void addPolynomial(Poly&, const Poly&, const Poly&);
 void subPolynomial(Poly&, const Poly&, const Poly&);
-void shiftPolynomial(Poly&, const Poly& poly);
+void shiftPolynomial(Poly&, const Poly&);
 void mulPolynomial(Poly&, const Poly&, const Poly&);
 
 void printPolynomial(const Poly&);

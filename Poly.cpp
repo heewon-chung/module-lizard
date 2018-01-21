@@ -1,6 +1,5 @@
 #include "Poly.h"
 
-
 void initializePolynomial(Poly& poly){
 
     #pragma omp parallel for
@@ -12,6 +11,8 @@ void initializePolynomial(Poly& poly){
 
 void generateRandomPolynomial(Poly& poly){
 
+    initializePolynomial(poly);
+
     #pragma omp parallel for
     for(size_t i = 0; i < degree; i++){
         poly.coeff[i] = rand() % coeffModulus;
@@ -19,9 +20,10 @@ void generateRandomPolynomial(Poly& poly){
 
 }
 
-void generateBinaryPolynomial(Poly& poly){
-
+void generateSignedPolynomial(Poly& poly){
     
+    initializePolynomial(poly);
+
     #pragma omp parallel for
     for(size_t i = 0; i < degree; i++){
         uint16_t rnd = rand() % 3;
@@ -40,6 +42,8 @@ void generateBinaryPolynomial(Poly& poly){
 
 void addPolynomial(Poly& addPoly, const Poly& poly1, const Poly& poly2){
 
+    // initializePolynomial(addPoly);
+
     #pragma omp parallel for
     for(size_t i = 0; i < degree; i++){
         addPoly.coeff[i] = poly1.coeff[i] + poly2.coeff[i];
@@ -49,37 +53,51 @@ void addPolynomial(Poly& addPoly, const Poly& poly1, const Poly& poly2){
 
 void subPolynomial(Poly& subPoly, const Poly& poly1, const Poly& poly2){
 
+    // initializePolynomial(subPoly);
+
     #pragma omp parallel for
     for(size_t i = 0; i < degree; i++){
-        subPoly.coeff[i] = poly2.coeff[i] - poly2.coeff[i];
+        subPoly.coeff[i] = poly1.coeff[i] - poly2.coeff[i];
     }
 
 }
 
-// shiftPoly = Poly << 1 mod X^n + 1
+// shiftPoly = Poly >> 1 mod X^n + 1
 void shiftPolynomial(Poly& shiftPoly, const Poly& poly){
-    
+
+    // initializePolynomial(shiftPoly);
+
+    shiftPoly.coeff[0] = -poly.coeff[degree - 1];
+
     #pragma omp parallel for
-    for(size_t i = degree; i > 0; i--){
+    for(size_t i = 1; i < degree; i++){
         shiftPoly.coeff[i] = poly.coeff[i - 1];
     }
 
-    shiftPoly.coeff[0] = -shiftPoly.coeff[degree];
-
 }
 
-void multPolynomial(Poly& mulPoly, const Poly& poly1, const Poly& poly2){
+// poly2 should be a signed binary polynomial.
+void mulPolynomial(Poly& mulPoly, const Poly& poly1, const Poly& poly2){
+
+    initializePolynomial(mulPoly);
 
     size_t pos = 0;
-    Poly shiftPoly = poly2;
+    Poly shiftPoly = poly1;
 
-    while(pos < degree){    
-        shiftPolynomial(shiftPoly, shiftPoly);
+    while(pos < degree){
 
-        if(poly2.coeff[pos] != 0){
-            addPolynomial(mulPoly, poly1, shiftPoly);
+        Poly tmpShiftPoly, tmpMulPoly; 
+        if(poly2.coeff[pos] == 1){
+            addPolynomial(tmpMulPoly, mulPoly, shiftPoly);
+            mulPoly = tmpMulPoly;
         }
-
+        else if(poly2.coeff[pos] == -1){
+            subPolynomial(tmpMulPoly, mulPoly, shiftPoly);
+            mulPoly = tmpMulPoly;
+        }
+        
+        shiftPolynomial(tmpShiftPoly, shiftPoly);
+        shiftPoly = tmpShiftPoly;
         pos++;
     }
 
@@ -89,6 +107,7 @@ void multPolynomial(Poly& mulPoly, const Poly& poly1, const Poly& poly2){
 void printPolynomial(const Poly& poly){
 
     for(size_t i = 0; i < degree; i++){
-        cout << poly.coeff[i] << "\t" << endl;
+        cout << poly.coeff[i] << "\t";
     }
+    cout << endl;
 }
