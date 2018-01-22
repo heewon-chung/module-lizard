@@ -11,7 +11,7 @@ LIB_OBJS = *.o
 FLAGS = -O2 -lm -std=c++11
 LIB_DIRS = ~/Documents/03_Source_Code/C/module-lizard
 
-OBJ_SRCS = Poly.cpp PolyVec.cpp sampling.cpp mlizard.cpp
+OBJ_SRCS = utilities.cpp Poly.cpp PolyVec.cpp sampling.cpp mlizard.cpp
 TEST_SRCS = testPoly.cpp testMLizard.cpp
 
 all : clean $(LIB_FULL_NAME) test_poly test_mlizard
